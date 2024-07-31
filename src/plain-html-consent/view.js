@@ -19,13 +19,18 @@
  *
  * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-metadata/#view-script
  */
-import { store, getContext, getElement } from "@wordpress/interactivity";
 
-/* eslint-disable no-console */
-console.log("Hello World! (from create-block-copyright-date-block block)");
-/* eslint-enable no-console */
+import {getContext, getElement, store} from "@wordpress/interactivity";
 
-const { state, actions } = store("wp-content-consent-blocks/plain-html-consent", {
+/**
+ * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.
+ * Those files can contain any CSS code that gets applied to the editor.
+ *
+ * @see https://www.npmjs.com/package/@wordpress/scripts#using-css
+ */
+import './view.scss';
+
+const {state, actions} = store("wp-content-consent-blocks/plain-html-consent", {
 	actions: {
 		toggleConsent: () => {
 			const context = getContext();
@@ -60,13 +65,15 @@ const { state, actions } = store("wp-content-consent-blocks/plain-html-consent",
 			!contentPlaceholder && console.warn("Content placeholder not found:", contentId);
 
 			disclaimerPlaceholder?.remove();
-			contentPlaceholder?.replaceWith(context.contentHtml);
+			if (contentPlaceholder) {
+				contentPlaceholder.innerHTML = context.contentHtml;
+			}
 		}
 	},
 	callbacks: {
 		initConsent: () => {
 			const context = getContext();
-			const { consentId } = context;
+			const {consentId} = context;
 			const consentGiven = localStorage.getItem("content-consent_" + consentId) === "true";
 			context.consentGiven = consentGiven;
 			console.info("Consent initialized for id=" + consentId + " with value=" + consentGiven);

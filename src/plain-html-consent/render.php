@@ -16,6 +16,9 @@ if ( ! $disclaimerHtml || ! $consentId ) {
 	return;
 }
 
+$enableBtnCaption  = $attributes["enableBtnCaption"] ?? __( "Show content", "wp-content-consent-blocks" );
+$disableBtnCaption = $attributes["disableBtnCaption"] ?? __( "Hide content", "wp-content-consent-blocks" );
+
 $interactivityContext = json_encode( [
 	"consentId"         => $consentId,
 	"disclaimerHtml"    => $disclaimerHtml,
@@ -31,11 +34,14 @@ $interactivityContext = json_encode( [
 	data-wp-context="<?php echo esc_attr( $interactivityContext ) ?>"
 	data-wp-init="callbacks.initConsent"
 >
-	<div id="disclaimer--<?php echo esc_attr( $consentId ) ?>">
+	<div id="disclaimer--<?php echo esc_attr( $consentId ) ?>" class="content-disclaimer">
 		<?php echo $disclaimerHtml ?>
+		<button class="toggle-button" data-wp-on--click="actions.showContent">
+			<?php echo esc_html( $enableBtnCaption ) ?>
+		</button>
 	</div>
-	<div id="content--<?php echo esc_attr( $consentId ) ?>"></div>
-	<button data-wp-on--click="actions.toggleConsent">
-		Click Me!
+	<div id="content--<?php echo esc_attr( $consentId ) ?>" class="content"></div>
+	<button class="toggle-button" data-wp-bind--hidden="!context.consentGiven" data-wp-on--click="actions.hideContent">
+		<?php echo esc_html( $disableBtnCaption ) ?>
 	</button>
 </div>

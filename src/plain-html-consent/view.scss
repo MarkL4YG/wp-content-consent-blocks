@@ -1,0 +1,27 @@
+/**
+ * The following styles get applied both on the front of your site
+ * and in the editor.
+ *
+ * Replace them with your own styles or remove the file completely.
+ */
+
+.wp-block-wp-content-consent-blocks-plain-html-consent {
+	.content-disclaimer {
+		padding: 64px;
+		border-style: solid;
+		border-radius: 8px;
+		border-color: #f00075;
+		max-width: 600px;
+		margin-inline: auto;
+
+		display: flex;
+		flex-direction: column;
+	}
+
+	.toggle-button {
+		border: 1px solid #bbbbbb;
+		padding: 8px 16px;
+		border-radius: 8px;
+		background-color: unset;
+	}
+}

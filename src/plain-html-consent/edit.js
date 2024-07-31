@@ -41,7 +41,7 @@ export default function Edit({attributes, setAttributes}) {
 				consentId: randomId
 			})
 		}
-	}, [attributes.consentId])
+	}, [attributes.consentId]);
 
 	return (
 		<>
