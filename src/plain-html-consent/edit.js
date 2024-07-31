@@ -53,6 +53,24 @@ export default function Edit({attributes, setAttributes}) {
 									 consentId: next
 								 })}
 					/>
+					<TextControl
+						label={__("Give consent caption", "wp-content-consent-blocks")}
+						value={attributes.enableBtnCaption}
+						onChange={next => {
+							setAttributes({
+								enableBtnCaption: next,
+							})
+						}}
+					/>
+					<TextControl
+						label={__("Withdraw consent caption", "wp-content-consent-blocks")}
+						value={attributes.disableBtnCaption}
+						onChange={next => {
+							setAttributes({
+								disableBtnCaption: next,
+							})
+						}}
+					/>
 				</PanelBody>
 			</InspectorControls>
 			<div {...useBlockProps({
