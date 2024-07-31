@@ -11,3 +11,13 @@
  * License URI: https://opensource.org/licenses/MIT
  */
 
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly.
+}
+
+function wp_content_consent_blocks_init() {
+	register_block_type( __DIR__ . '/blocks/plain-html-consent' );
+}
+
+add_action('init', 'wp_content_consent_blocks_init');

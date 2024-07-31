@@ -5,3 +5,5 @@
 
 # Wordpress & build files #
 node_modules/
+scaffold/
+build/
