@@ -9,9 +9,30 @@
   "description": "Allows user to consent to loading some plain HTML (possibly containing scripts).",
   "example": {},
   "supports": {
+    "color": {
+      "text": true,
+      "background": true
+    },
     "html": true
   },
-  "textdomain": "copyright-date-block",
+  "attributes": {
+    "disclaimerHtml": {
+      "type": "string"
+    },
+    "contentHtml": {
+      "type": "string"
+    },
+    "enableBtnCaption": {
+      "type": "string"
+    },
+    "disableBtnCaption": {
+      "type": "string"
+    },
+    "consentId": {
+      "type": "string"
+    }
+  },
+  "textdomain": "wp-content-consent-blocks",
   "editorScript": "file:./index.js",
   "editorStyle": "file:./index.css",
   "style": "file:./style-index.css",
