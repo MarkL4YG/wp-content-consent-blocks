@@ -16,10 +16,6 @@ if ( ! $disclaimerHtml || ! $consentId ) {
 	return;
 }
 
-$additAttribs = [
-	"class" => "wp-content-consent-block",
-];
-
 $interactivityContext = json_encode( [
 	"consentId"         => $consentId,
 	"disclaimerHtml"    => $disclaimerHtml,
@@ -30,14 +26,16 @@ $interactivityContext = json_encode( [
 ] )
 
 ?>
-<div <?php echo get_block_wrapper_attributes( $additAttribs ); ?>
+<div <?php echo get_block_wrapper_attributes(); ?>
 	data-wp-interactive="wp-content-consent-blocks/plain-html-consent"
-	data-wp-context="<?php echo esc_attr($interactivityContext) ?>">
-	<div id="disclaimer--<?php echo esc_attr($consentId) ?>">
+	data-wp-context="<?php echo esc_attr( $interactivityContext ) ?>"
+	data-wp-init="callbacks.initConsent"
+>
+	<div id="disclaimer--<?php echo esc_attr( $consentId ) ?>">
 		<?php echo $disclaimerHtml ?>
 	</div>
-	<div id="content--<?php echo esc_attr($consentId) ?>"></div>
-	<button data-wp-on--click="actions.toggleConsent" >
+	<div id="content--<?php echo esc_attr( $consentId ) ?>"></div>
+	<button data-wp-on--click="actions.toggleConsent">
 		Click Me!
 	</button>
 </div>

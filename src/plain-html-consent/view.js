@@ -25,7 +25,7 @@ import { store, getContext, getElement } from "@wordpress/interactivity";
 console.log("Hello World! (from create-block-copyright-date-block block)");
 /* eslint-enable no-console */
 
-const { state } = store("wp-content-consent-blocks/plain-html-consent", {
+const { state, actions } = store("wp-content-consent-blocks/plain-html-consent", {
 	actions: {
 		toggleConsent: () => {
 			const context = getContext();
@@ -33,25 +33,45 @@ const { state } = store("wp-content-consent-blocks/plain-html-consent", {
 			context.consentGiven = nextConsent;
 
 			if (!nextConsent) {
-				localStorage.removeItem("content-consent_" + context.consentId);
-				console.info("Consent removed, reloading page to ensure any scripts are unloaded...");
-				window.setTimeout(() => {
-					location.reload();
-				}, 20);
+				actions.hideContent();
 			} else {
-				console.info("User consented to display content id=" + context.consentId);
-				localStorage.setItem("content-consent_" + context.consentId, "true");
-				const disclaimerId = "disclaimer--" + context.consentId;
-				const contentId = "content--" + context.consentId;
+				actions.showContent();
+			}
+		},
+		hideContent: () => {
+			const context = getContext();
+			localStorage.removeItem("content-consent_" + context.consentId);
+			console.info("Consent removed, reloading page to ensure any scripts are unloaded...");
+			window.setTimeout(() => {
+				location.reload();
+			}, 20);
+		},
+		showContent: () => {
+			const context = getContext();
+			console.info("User consented to display content id=" + context.consentId);
+			localStorage.setItem("content-consent_" + context.consentId, "true");
+			const disclaimerId = "disclaimer--" + context.consentId;
+			const contentId = "content--" + context.consentId;
 
-				const element = getElement();
-				const disclaimerPlaceholder = document.getElementById(disclaimerId);
-				const contentPlaceholder = document.getElementById(contentId);
-				!disclaimerPlaceholder && console.warn("Disclaimer placeholder not found:", disclaimerId);
-				!contentPlaceholder && console.warn("Content placeholder not found:", contentId);
+			const element = getElement();
+			const disclaimerPlaceholder = document.getElementById(disclaimerId);
+			const contentPlaceholder = document.getElementById(contentId);
+			!disclaimerPlaceholder && console.warn("Disclaimer placeholder not found:", disclaimerId);
+			!contentPlaceholder && console.warn("Content placeholder not found:", contentId);
 
-				disclaimerPlaceholder?.remove();
-				contentPlaceholder?.replaceWith(context.contentHtml);
+			disclaimerPlaceholder?.remove();
+			contentPlaceholder?.replaceWith(context.contentHtml);
+		}
+	},
+	callbacks: {
+		initConsent: () => {
+			const context = getContext();
+			const { consentId } = context;
+			const consentGiven = localStorage.getItem("content-consent_" + consentId) === "true";
+			context.consentGiven = consentGiven;
+			console.info("Consent initialized for id=" + consentId + " with value=" + consentGiven);
+			if (consentGiven) {
+				actions.showContent();
 			}
 		}
 	}
