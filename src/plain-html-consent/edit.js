@@ -34,37 +34,39 @@ import './editor.scss';
  */
 export default function Edit({attributes, setAttributes}) {
 
-    React.useEffect(() => {
-        const randomId = window.crypto?.randomUUID?.() ?? "n/a";
-        if (attributes.consentId === "") {
-            setAttributes({
-                consentId: randomId
-            })
-        }
-    }, [attributes.consentId])
+	React.useEffect(() => {
+		const randomId = window.crypto?.randomUUID?.() ?? "n/a";
+		if (!attributes.consentId) {
+			setAttributes({
+				consentId: randomId
+			})
+		}
+	}, [attributes.consentId])
 
-    return (
-        <>
-            <InspectorControls>
-                <PanelBody title={__("Settings", "wp-content-consent-blocks")}>
-                    <TextControl label={__("ConsentId", "wp-content-consent-blocks")}
-                                 value={attributes.consentId}
-                                 onChange={next => setAttributes({
-                                     consentId: next
-                                 })}
-                    />
-                </PanelBody>
-            </InspectorControls>
-            <div {...useBlockProps({
-                className: 'block-plain-html-consent',
-            })}>
-                <TextareaControl value={attributes.disclaimerHtml ?? ""} onChange={next => setAttributes({
-                    disclaimerHtml: next,
-                })}/>
-                <TextareaControl value={attributes.contentHtml ?? ""} onChange={next => setAttributes({
-                    contentHtml: next,
-                })}/>
-            </div>
-        </>
-    );
+	return (
+		<>
+			<InspectorControls>
+				<PanelBody title={__("Settings", "wp-content-consent-blocks")}>
+					<TextControl label={__("ConsentId", "wp-content-consent-blocks")}
+								 value={attributes.consentId}
+								 onChange={next => setAttributes({
+									 consentId: next
+								 })}
+					/>
+				</PanelBody>
+			</InspectorControls>
+			<div {...useBlockProps({
+				className: 'block-plain-html-consent',
+			})}>
+				<TextareaControl label="Disclaimer (HTML)" value={attributes.disclaimerHtml ?? ""}
+								 onChange={next => setAttributes({
+									 disclaimerHtml: next,
+								 })}/>
+				<TextareaControl label="Content (HTML)" value={attributes.contentHtml ?? ""}
+								 onChange={next => setAttributes({
+									 contentHtml: next,
+								 })}/>
+			</div>
+		</>
+	);
 }
