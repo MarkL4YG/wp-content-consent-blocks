@@ -13,8 +13,8 @@ import {__} from '@wordpress/i18n';
  *
  * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-block-editor/#useblockprops
  */
-import {InspectorControls, useBlockProps} from '@wordpress/block-editor';
-import {PanelBody, TextareaControl, TextControl} from '@wordpress/components';
+import {InnerBlocks, InspectorControls, useBlockProps} from '@wordpress/block-editor';
+import {PanelBody, TextareaControl, TextControl, ToggleControl} from '@wordpress/components';
 
 /**
  * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.
@@ -42,6 +42,7 @@ export default function Edit({attributes, setAttributes}) {
 			})
 		}
 	}, [attributes.consentId]);
+	const useCustomDisclaimer = !!attributes.customDisclaimerHtml;
 
 	return (
 		<>
@@ -71,19 +72,37 @@ export default function Edit({attributes, setAttributes}) {
 							})
 						}}
 					/>
+					<ToggleControl label={__("Use HTML for disclaimer", "wp-content-consent-blocks")}
+								   checked={useCustomDisclaimer}
+								   onChange={next => {
+									   setAttributes({
+										   customDisclaimerHtml: next,
+									   })
+								   }}
+					/>
 				</PanelBody>
 			</InspectorControls>
 			<div {...useBlockProps({
 				className: 'block-plain-html-consent',
 			})}>
-				<TextareaControl label="Disclaimer (HTML)" value={attributes.disclaimerHtml ?? ""}
-								 onChange={next => setAttributes({
-									 disclaimerHtml: next,
-								 })}/>
 				<TextareaControl label="Content (HTML)" value={attributes.contentHtml ?? ""}
 								 onChange={next => setAttributes({
 									 contentHtml: next,
 								 })}/>
+				{!useCustomDisclaimer && (
+					<>
+						<label className="my-2">Disclaimer</label>
+						<InnerBlocks />
+					</>
+				)}
+				{useCustomDisclaimer && (
+					<TextareaControl label="Disclaimer (HTML)"
+									 className="mt-2"
+									 value={attributes.disclaimerHtml ?? ""}
+									 onChange={next => setAttributes({
+										 disclaimerHtml: next,
+									 })}/>
+				)}
 			</div>
 		</>
 	);

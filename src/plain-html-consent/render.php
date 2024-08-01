@@ -12,21 +12,24 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 $disclaimerHtml = $attributes["disclaimerHtml"];
 $consentId      = $attributes["consentId"];
-if ( ! $disclaimerHtml || ! $consentId ) {
+if ( ! $consentId ) {
 	return;
 }
 
 $enableBtnCaption  = $attributes["enableBtnCaption"] ?? __( "Show content", "wp-content-consent-blocks" );
 $disableBtnCaption = $attributes["disableBtnCaption"] ?? __( "Hide content", "wp-content-consent-blocks" );
 
+$useCustomDisclaimer = $attributes["customDisclaimerHtml"] === true;
+$children = do_blocks($content);
+
 $interactivityContext = json_encode( [
 	"consentId"         => $consentId,
-	"disclaimerHtml"    => $disclaimerHtml,
+	"disclaimerHtml"    => $useCustomDisclaimer ? $disclaimerHtml : $children,
 	"contentHtml"       => $attributes["contentHtml"],
 	"enableBtnCaption"  => $attributes["enableBtnCaption"],
 	"disableBtnCaption" => $attributes["disableBtnCaption"],
 	"consentGiven"      => false,
-] )
+] );
 
 ?>
 <div <?php echo get_block_wrapper_attributes(); ?>
@@ -34,14 +37,18 @@ $interactivityContext = json_encode( [
 	data-wp-context="<?php echo esc_attr( $interactivityContext ) ?>"
 	data-wp-init="callbacks.initConsent"
 >
-	<div id="disclaimer--<?php echo esc_attr( $consentId ) ?>" class="content-disclaimer">
-		<?php echo $disclaimerHtml ?>
+	<div id="disclaimer--<?php echo esc_attr( $consentId ) ?>" class="content-container content-disclaimer"
+		 data-wp-bind--hidden="context.consentGiven"
+	>
+		<?php echo $useCustomDisclaimer ? $disclaimerHtml : $children ?>
 		<button class="toggle-button" data-wp-on--click="actions.showContent">
 			<?php echo esc_html( $enableBtnCaption ) ?>
 		</button>
 	</div>
 	<div id="content--<?php echo esc_attr( $consentId ) ?>" class="content"></div>
-	<button class="toggle-button" data-wp-bind--hidden="!context.consentGiven" data-wp-on--click="actions.hideContent">
-		<?php echo esc_html( $disableBtnCaption ) ?>
-	</button>
+	<div class="content-container" data-wp-bind--hidden="!context.consentGiven">
+		<button class="toggle-button" data-wp-on--click="actions.hideContent">
+			<?php echo esc_html( $disableBtnCaption ) ?>
+		</button>
+	</div>
 </div>

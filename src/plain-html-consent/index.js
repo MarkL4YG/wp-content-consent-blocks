@@ -4,6 +4,7 @@
  * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-registration/
  */
 import { registerBlockType } from '@wordpress/blocks';
+import { InnerBlocks } from "@wordpress/block-editor";
 
 /**
  * Internal dependencies
@@ -21,4 +22,7 @@ registerBlockType( metadata.name, {
 	 * @see ./edit.js
 	 */
 	edit: Edit,
+	save: () => {
+		return <InnerBlocks.Content />
+	}
 } );

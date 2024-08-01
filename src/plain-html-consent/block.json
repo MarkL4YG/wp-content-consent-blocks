@@ -17,6 +17,9 @@
 		"interactivity": true
 	},
 	"attributes": {
+		"customDisclaimerHtml": {
+			"type": "boolean"
+		},
 		"disclaimerHtml": {
 			"type": "string"
 		},

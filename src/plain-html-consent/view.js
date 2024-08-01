@@ -45,28 +45,50 @@ const {state, actions} = store("wp-content-consent-blocks/plain-html-consent", {
 		},
 		hideContent: () => {
 			const context = getContext();
+			context.consentGiven = false;
 			localStorage.removeItem("content-consent_" + context.consentId);
 			console.info("Consent removed, reloading page to ensure any scripts are unloaded...");
+
 			window.setTimeout(() => {
 				location.reload();
-			}, 20);
+			}, 300);
 		},
 		showContent: () => {
 			const context = getContext();
-			console.info("User consented to display content id=" + context.consentId);
+			context.consentGiven = true;
 			localStorage.setItem("content-consent_" + context.consentId, "true");
-			const disclaimerId = "disclaimer--" + context.consentId;
-			const contentId = "content--" + context.consentId;
+			console.info("User consented to display content id=" + context.consentId);
 
-			const element = getElement();
-			const disclaimerPlaceholder = document.getElementById(disclaimerId);
+			const contentId = "content--" + context.consentId;
 			const contentPlaceholder = document.getElementById(contentId);
-			!disclaimerPlaceholder && console.warn("Disclaimer placeholder not found:", disclaimerId);
 			!contentPlaceholder && console.warn("Content placeholder not found:", contentId);
 
-			disclaimerPlaceholder?.remove();
 			if (contentPlaceholder) {
 				contentPlaceholder.innerHTML = context.contentHtml;
+				setTimeout(() => {
+					actions.reinitScripts(contentPlaceholder)
+				}, 300);
+			}
+		},
+		/**
+		 * Script tags aren't activated from setting Element#innerHtml. They need to be cloned using JavaScript to become executable.
+		 * @param node {HTMLElement}
+		 */
+		reinitScripts: (node) => {
+			for (let i = 0; i < node.children.length; i++) {
+				const child = node.children.item(i);
+				if (child.tagName === "SCRIPT") {
+					console.info("Found script node. Replacing...")
+					const clone = document.createElement("script");
+					clone.text = child.innerHTML;
+					for (let attrIdx = 0; attrIdx < child.attributes.length; attrIdx++) {
+						clone.setAttribute(child.attributes.item(attrIdx).name, child.attributes.item(attrIdx).value);
+					}
+					child.replaceWith(clone);
+
+				} else if (child.children?.length > 0) {
+					actions.reinitScripts(child);
+				}
 			}
 		}
 	},
