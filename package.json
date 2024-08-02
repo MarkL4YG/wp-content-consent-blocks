@@ -33,7 +33,7 @@
 		"lint:pkg-json": "wp-scripts lint-pkg-json",
 		"package": "npm run build && npm run plugin-zip",
 		"packages-update": "wp-scripts packages-update",
-		"plugin-zip": "wp-scripts plugin-zip",
+		"plugin-zip": "node ./scripts/package-plugin.mjs",
 		"start": "wp-scripts start",
 		"test:e2e": "wp-scripts test-e2e",
 		"test:unit": "wp-scripts test-unit-js"
@@ -45,6 +45,7 @@
 		"@wordpress/interactivity": "wp-6.6"
 	},
 	"devDependencies": {
-		"@wordpress/scripts": "wp-6.6"
+		"@wordpress/scripts": "wp-6.6",
+		"adm-zip": "^0.5.14"
 	}
 }
