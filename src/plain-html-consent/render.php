@@ -10,24 +10,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
 }
 
-$disclaimerHtml = $attributes["disclaimerHtml"];
 $consentId      = $attributes["consentId"];
 if ( ! $consentId ) {
 	return;
 }
 
-$enableBtnCaption  = $attributes["enableBtnCaption"] ?? __( "Show content", "wp-content-consent-blocks" );
-$disableBtnCaption = $attributes["disableBtnCaption"] ?? __( "Hide content", "wp-content-consent-blocks" );
-
-$useCustomDisclaimer = $attributes["customDisclaimerHtml"] === true;
-$children = do_blocks($content);
+$disclaimerHtml = $attributes["disclaimerHtml"];
+$enableBtnCaption  =  __($attributes["enableBtnCaption"] ?? "Show content", "wp-content-consent-blocks" );
+$disableBtnCaption =  __( $attributes["disableBtnCaption"] ?? "Hide content", "wp-content-consent-blocks" );
+$usePlainHtmlDisclaimer = $attributes["customDisclaimerHtml"] === true;
 
 $interactivityContext = json_encode( [
 	"consentId"         => $consentId,
-	"disclaimerHtml"    => $useCustomDisclaimer ? $disclaimerHtml : $children,
 	"contentHtml"       => $attributes["contentHtml"],
-	"enableBtnCaption"  => $attributes["enableBtnCaption"],
-	"disableBtnCaption" => $attributes["disableBtnCaption"],
 	"consentGiven"      => false,
 ] );
 
@@ -40,7 +35,13 @@ $interactivityContext = json_encode( [
 	<div id="disclaimer--<?php echo esc_attr( $consentId ) ?>" class="content-container content-disclaimer"
 		 data-wp-bind--hidden="context.consentGiven"
 	>
-		<?php echo $useCustomDisclaimer ? $disclaimerHtml : $children ?>
+		<?php
+			if ($usePlainHtmlDisclaimer) {
+				echo $disclaimerHtml;
+			} else {
+				echo do_blocks($content);
+			}
+		?>
 		<button class="toggle-button" data-wp-on--click="actions.showContent">
 			<?php echo esc_html( $enableBtnCaption ) ?>
 		</button>
