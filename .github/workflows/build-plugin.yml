@@ -22,6 +22,6 @@ jobs:
       - name: Attach plugin archive
         uses: actions/upload-artifact@v4
         with:
-          name: wp-content-consent-blocks.zip
+          name: build-output
           path: ./wp-content-consent-blocks.zip
           retention-days: 5
