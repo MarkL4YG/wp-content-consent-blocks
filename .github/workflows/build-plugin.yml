@@ -19,9 +19,9 @@ jobs:
         run: npm install
       - name: Run package script
         run: npm run package
-      - name: Archive code coverage results
+      - name: Attach plugin archive
         uses: actions/upload-artifact@v4
         with:
-          name: code-coverage-report
+          name: wp-content-consent-blocks.zip
           path: ./wp-content-consent-blocks.zip
           retention-days: 5
