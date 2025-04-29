@@ -39,13 +39,13 @@
 		"test:unit": "wp-scripts test-unit-js"
 	},
 	"dependencies": {
-		"@wordpress/block-editor": "wp-6.6",
-		"@wordpress/components": "wp-6.6",
-		"@wordpress/i18n": "wp-6.6",
-		"@wordpress/interactivity": "wp-6.6"
+		"@wordpress/block-editor": "wp-6.8",
+		"@wordpress/components": "wp-6.8",
+		"@wordpress/i18n": "wp-6.8",
+		"@wordpress/interactivity": "wp-6.8"
 	},
 	"devDependencies": {
-		"@wordpress/scripts": "wp-6.6",
-		"adm-zip": "^0.5.14"
+		"@wordpress/scripts": "wp-6.8",
+		"adm-zip": "^0.5.16"
 	}
 }
